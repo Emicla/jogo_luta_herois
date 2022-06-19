@@ -1,2 +1,2 @@
-# jogo_luta_herois
-Criação de um jogo de luta contendo vários heróis usando pygame
+# Jogo de luta com alguns heróis
+Jogo criado usando pygame
