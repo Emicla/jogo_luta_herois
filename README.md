@@ -1,8 +1,8 @@
-# Jogo de luta com alguns her√≥is
- - Emicl√£ Lenon da Rosa
+# Jogo de luta com alguns herÛis
+ - Emicl„ Lenon da Rosa
  - RA: 1129842
  - email: emiclalenondarosa@gmail.com
-## Descri√ß√£o
-Esse projeto √© um desafio da faculdade com o objetivo de criar um jogo 2d usando o pygame, e a tem√°tica escolhida foi um jogo de luta com alguns her√≥is que s√£o liberados depois de cada batalha e o objetivo √© conseguir liberar todos eles.
+## DescriÁ„o
+Esse projeto È um desafio da faculdade com o objetivo de criar um jogo 2d usando o pygame, e a tem√°tica escolhida foi um jogo de luta com alguns herÛis que s„o liberados depois de cada batalha e o objetivo È conseguir liberar todos eles.
 
 **Boa sorte !!**

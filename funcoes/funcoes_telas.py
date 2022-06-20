@@ -136,7 +136,7 @@ def telaContinuar(saves, saveNomes):
                         numeroSave = len(saveNomes)
                     else:
                         numeroSave -= 1
-                elif event.key == pygame.K_RETURN:
+                elif event.key == pygame.K_RETURN and len(saves) > 0:
                     return ["Modos", saves[numeroSave - 1][-2]]
 
                 elif event.key == pygame.K_x:
@@ -154,8 +154,8 @@ def telaContinuar(saves, saveNomes):
         clock.tick(60)
 
 def telaBatalha():
-    hyoga = pygame.image.load("Imagens/Imagem Hyoga.jpg")
-    goku = pygame.image.load("Imagens/Imagem Goku.jpg")
+    hyoga = pygame.image.load("Imagens/Hyoga.jpg")
+    goku = pygame.image.load("Imagens/Goku.jpg")
     personagemJogador = ""
     personagemMaquina = ""
     posicaoPersonagem = 0

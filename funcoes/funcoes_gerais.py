@@ -12,16 +12,17 @@ def registrar(arquivo, informacoes):
     arquivo.close()
 
 def ler_registro(arquivo):
-    arquivo = open(arquivo, "r")
-    conteudo = arquivo.readlines()
-    arquivo.close()
-    return conteudo
+    try:
+        arquivo = open(arquivo, "r")
+        conteudo = arquivo.readlines()
+        arquivo.close()
+        return conteudo
+        
+    except:
+        return []
 
 def armazenar(arquivo):
-    try:
-        conteudo = ler_registro(arquivo)
-    except:
-        conteudo = []
+    conteudo = ler_registro(arquivo)
     
     conteudo.append("Historico %s 1\n"%str(len(conteudo)+1))
 

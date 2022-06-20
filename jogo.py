@@ -43,12 +43,16 @@ while True:
     elif telaAtual == "Continuar":
         savesNomes = []
 
-        for posicao, save in enumerate(saves):
-            print(save)
-            save = list(save)
-            save[-2] = ""
-            save = ''.join(save)
-            savesNomes.append(save)
+        if len(saves) == 0:
+            savesNomes.append("Nenhum Save encontrado")
+
+        else:
+            for posicao, save in enumerate(saves):
+                print(save)
+                save = list(save)
+                save[-2] = ""
+                save = ''.join(save)
+                savesNomes.append(save)
 
         arrayCena = telaContinuar(saves, savesNomes)
         telaAtual = arrayCena[0]
