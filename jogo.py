@@ -1,11 +1,12 @@
-import pygame
+import pygame, os
 pygame.init()
+os.system("cls")
 
-from funcoes.funcoes_gerais import armazenar
+from funcoes.funcoes_telas import telaMenu, telaModos, telaContinuar, telaBatalha
+from funcoes.funcoes_luta import luta
 
 largura_tela = 950
 altura_tela = 550
-
 tamanho_tela = (largura_tela, altura_tela)
 
 pygame_display = pygame.display
@@ -14,14 +15,14 @@ gameDisplay = pygame.display.set_mode(tamanho_tela)
 
 clock = pygame.time.Clock()
 
-telas = [0]
+telaAtual = "Menu"
+saves = []
 
-telaAtual = 0
+nomesPersonagens = ["Hyoga", "Goku"]
+personagemPlayer = ""
+personagemMaquina = ""
 
-def escreveTela(texto, cor, tamanho):
-    fonte = pygame.font.Font("freesansbold.ttf", tamanho)
-    frase = fonte.render(texto, True, cor)
-    return frase
+nivel = 1
 
 def jogo():
     while True:
@@ -33,58 +34,34 @@ def jogo():
         pygame_display.update()
         clock.tick(60)
 
-def telaMenu():
-    imagemMenu = pygame.image.load("Imagens/Imagem menu.jpg")
-    selecionado = 190
-    while True:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                pygame.quit()
-                quit()
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_UP:
-                    if selecionado == 190:
-                        selecionado += 130
-                    else:
-                        selecionado -= 130
-                elif event.key == pygame.K_DOWN:
-                    if selecionado == 320:
-                        selecionado -= 130
-                    else:
-                        selecionado += 130
-                elif event.key == pygame.K_RETURN:
-                    if selecionado == 190:
-                        armazenar("Registro de partidas.txt")
-                        return "Modos"
-
-        # gameDisplay.fill((40, 80, 100))
-        gameDisplay.blit(imagemMenu, (0, 0))
-
-        pygame.draw.rect(gameDisplay, (40, 80, 100), pygame.Rect(216, 190, 500, 90))
-        pygame.draw.rect(gameDisplay, (40, 80, 100), pygame.Rect(216, 320, 500, 90))
-        pygame.draw.rect(gameDisplay, (255, 255, 255), pygame.Rect(216, selecionado, 500, 90), 2)
-
-        gameDisplay.blit(escreveTela("Novo Jogo", (255, 255, 255), 50), (328, 215))
-        gameDisplay.blit(escreveTela("Continuar", (255, 255, 255), 50), (328, 343))
-
-        pygame_display.update()
-        clock.tick(60)
-
-def telaModos():
-    while True:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                pygame.quit()
-                quit()
-                
-        gameDisplay.fill((40, 80, 100))
-
-        pygame_display.update()
-        clock.tick(60)
-
 while True:
-    if telaAtual == telas[0]:
-        telaAtual = telaMenu()
-        
+    if telaAtual == "Menu":
+        arrayCena = telaMenu()
+        telaAtual = arrayCena[0]
+        saves = arrayCena[1]
+    
+    elif telaAtual == "Continuar":
+        savesNomes = []
+
+        for posicao, save in enumerate(saves):
+            print(save)
+            save = list(save)
+            save[-2] = ""
+            save = ''.join(save)
+            savesNomes.append(save)
+
+        arrayCena = telaContinuar(saves, savesNomes)
+        telaAtual = arrayCena[0]
+        nivel = arrayCena[1]
+
     elif telaAtual == "Modos":
-        telaAtual = telaModos()
+        telaAtual = telaModos(nivel)
+    
+    elif telaAtual == "Batalha":
+        arrayCena = telaBatalha()
+        telaAtual = arrayCena[0]
+        personagemPlayer = nomesPersonagens[arrayCena[1]]
+        personagemMaquina = nomesPersonagens[arrayCena[2]]
+
+    elif telaAtual == "Luta":
+        telaAtual = luta(personagemPlayer, personagemMaquina)

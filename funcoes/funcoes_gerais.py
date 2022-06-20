@@ -1,3 +1,11 @@
+import pygame
+pygame.init()
+
+def escreveTela(texto, cor, tamanho):
+    fonte = pygame.font.Font("freesansbold.ttf", tamanho)
+    frase = fonte.render(texto, True, cor)
+    return frase
+
 def registrar(arquivo, informacoes):
     arquivo = open(arquivo, "w")
     arquivo.write(informacoes)
@@ -15,6 +23,6 @@ def armazenar(arquivo):
     except:
         conteudo = []
     
-    conteudo.append("Historico %s\n"%str(len(conteudo)+1))
+    conteudo.append("Historico %s 1\n"%str(len(conteudo)+1))
 
     registrar(arquivo, ''.join(conteudo))
