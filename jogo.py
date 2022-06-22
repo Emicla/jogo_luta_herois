@@ -19,8 +19,8 @@ telaAtual = "Menu"
 saves = []
 
 nomesPersonagens = ["Hyoga", "Goku"]
-personagemPlayer = ""
-personagemMaquina = ""
+player = ""
+oponente = ""
 
 nivel = 1
 
@@ -48,7 +48,6 @@ while True:
 
         else:
             for posicao, save in enumerate(saves):
-                print(save)
                 save = list(save)
                 save[-2] = ""
                 save = ''.join(save)
@@ -64,8 +63,8 @@ while True:
     elif telaAtual == "Batalha":
         arrayCena = telaBatalha()
         telaAtual = arrayCena[0]
-        personagemPlayer = nomesPersonagens[arrayCena[1]]
-        personagemMaquina = nomesPersonagens[arrayCena[2]]
+        player = nomesPersonagens[arrayCena[1]]
+        oponente = nomesPersonagens[arrayCena[2]]
 
     elif telaAtual == "Luta":
-        telaAtual = luta(personagemPlayer, personagemMaquina)
+        telaAtual = luta(player, oponente, nomesPersonagens.index(player), nomesPersonagens.index(oponente))

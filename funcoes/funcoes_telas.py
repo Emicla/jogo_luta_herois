@@ -43,7 +43,6 @@ def telaMenu():
 
                     elif selecionado == 320:
                         conteudo = ler_registro("Registro de partidas.txt")
-                        print(conteudo)
                         return ["Continuar", conteudo]
 
         if selecionado == 190:
@@ -117,7 +116,6 @@ def telaModos(nivel):
 
 def telaContinuar(saves, saveNomes):
     numeroSave = 1
-
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
