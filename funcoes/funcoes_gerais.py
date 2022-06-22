@@ -21,9 +21,9 @@ def ler_registro(arquivo):
     except:
         return []
 
-def armazenar(arquivo):
+def armazenar(informacao, arquivo):
     conteudo = ler_registro(arquivo)
     
-    conteudo.append("Historico %s 1\n"%str(len(conteudo)+1))
+    conteudo.append("%s\n"%informacao)
 
     registrar(arquivo, ''.join(conteudo))

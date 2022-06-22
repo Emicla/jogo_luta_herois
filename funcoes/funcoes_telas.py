@@ -2,6 +2,7 @@ import pygame
 pygame.init()
 
 from funcoes.funcoes_gerais import armazenar, ler_registro, escreveTela
+from funcoes.funcoes_luta import luta
 
 largura_tela = 950
 altura_tela = 550
@@ -100,7 +101,7 @@ def telaModos(nivel):
                     
         gameDisplay.fill((65, 81, 106))
 
-        gameDisplay.blit(escreveTela("Nível: %s"%str(nivel), (255, 255, 255), 25), (100, 100))
+        gameDisplay.blit(escreveTela("Nível: %d"%nivel, (255, 255, 255), 25), (100, 100))
 
         pygame.draw.rect(gameDisplay, (76, 154, 173), pygame.Rect(216, 190, 500, 90))
         pygame.draw.rect(gameDisplay, (76, 154, 173), pygame.Rect(216, 320, 500, 90))
@@ -206,5 +207,61 @@ def telaBatalha():
 
         gameDisplay.blit(escreveTela("Clique [X] para voltar", (255, 255, 255), 20), (20, 500))
 
+        pygame_display.update()
+        clock.tick(60)
+
+def telaTorneio(nivel, nomesPersonagens):
+    numeroOponente = 1
+    if nivel > len(nomesPersonagens):
+        personagemOponente = pygame.image.load("Imagens/%s.jpg"%nomesPersonagens[len(nomesPersonagens) - 1])
+        numeroOponente = len(nomesPersonagens) - 1
+    else:
+        personagemOponente = pygame.image.load("Imagens/%s.jpg"%nomesPersonagens[nivel])
+        numeroOponente = nivel
+
+    personagemJogador = pygame.image.load("Imagens/%s.jpg"%nomesPersonagens[nivel-1])
+
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                quit()
+
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_a:
+                    resultado = luta(nomesPersonagens[nivel-1], nomesPersonagens[numeroOponente], nivel-1, numeroOponente)
+                    return resultado
+
+                if event.key == pygame.K_x:
+                    return "Modos"
+        
+        gameDisplay.fill((65, 81, 106))
+
+        gameDisplay.blit(escreveTela("Torneio", (255, 255, 255), 40), (280, 90))
+        gameDisplay.blit(escreveTela("Nível: %d"%nivel, (255, 255, 255), 25), (100, 100))
+        gameDisplay.blit(personagemJogador, (216, 190))
+        gameDisplay.blit(personagemOponente, (416, 190))
+        gameDisplay.blit(escreveTela("Clique [a] para começar", (255, 255, 255), 20), (20, 400))
+
+        gameDisplay.blit(escreveTela("Clique [X] para voltar", (255, 255, 255), 20), (20, 500))
+        pygame_display.update()
+        clock.tick(60)
+
+def telaResulta(resultado):
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                quit()
+
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_x:
+                    return "Modos"
+
+        gameDisplay.fill((65, 81, 106))
+        gameDisplay.blit(escreveTela("Resutado", (255, 255, 255), 40), (380, 90))
+        gameDisplay.blit(escreveTela("Você %s"%resultado, (255, 0, 0), 40), (290, 200))
+
+        gameDisplay.blit(escreveTela("Clique [X] para voltar", (255, 255, 255), 20), (20, 500))
         pygame_display.update()
         clock.tick(60)

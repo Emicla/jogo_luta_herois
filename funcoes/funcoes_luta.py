@@ -1,6 +1,7 @@
 import pygame, random
 pygame.init()
-from funcoes.funcoes_gerais import armazenar, ler_registro, escreveTela
+from funcoes.funcoes_gerais import ler_registro
+
 largura_tela = 950
 altura_tela = 550
 tamanho_tela = (largura_tela, altura_tela)
@@ -50,6 +51,22 @@ def verificaColisao(xJogador, yJogador, xOponente, yOponente):
         return True
     else:
         return False
+
+def animacaoOponente(oponenteFrame, dadosOponente, incrementoVeri, incrementoFrame, personagemComputador, jogadorVirou, oponenteEnegia, numeroAleatorio, evento):
+    habilitaOponente = False
+    habilita = False
+    if oponenteFrame >= dadosOponente + incrementoVeri:
+        oponenteFrame = 1
+        habilitaOponente = True
+        numeroAleatorio = random.randrange(1, 5)
+        oponente = desenhaPersonagem(personagemComputador, 1, "parado", jogadorVirou)
+        oponenteEnegia -= 100
+        habilita = True
+    else:
+        oponente = desenhaPersonagem(personagemComputador, int(oponenteFrame), evento, jogadorVirou)
+        oponenteFrame += incrementoFrame
+
+    return [oponenteFrame, habilitaOponente, numeroAleatorio, oponente, oponenteEnegia, habilita]
 
 def luta(personagemPlayer, personagemComputador, indicePlayer, indiceMaquina):
 
@@ -129,7 +146,7 @@ def luta(personagemPlayer, personagemComputador, indicePlayer, indiceMaquina):
             if podeJogar == True:
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_LEFT:
-                        jogadorMovimentoX -= int(dadosPlayer["Velocidade"])
+                        jogadorMovimentoX = -int(dadosPlayer["Velocidade"])
                         jogadorAndando = True
 
                         if jogadorVirou == False:
@@ -138,7 +155,7 @@ def luta(personagemPlayer, personagemComputador, indicePlayer, indiceMaquina):
 
                     elif event.key == pygame.K_RIGHT:
                         jogadorAndando = True
-                        jogadorMovimentoX += int(dadosPlayer["Velocidade"])
+                        jogadorMovimentoX = +int(dadosPlayer["Velocidade"])
                         if jogadorVirou == True:
                             jogadorVirou = False
                             jogador = pygame.transform.flip(jogador, True, False)
@@ -164,14 +181,10 @@ def luta(personagemPlayer, personagemComputador, indicePlayer, indiceMaquina):
                             jogadorEnergia += 10
 
                 if event.type == pygame.KEYUP:
-                    if event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT:
+                    if event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT or event.key == pygame.K_d:
                         jogadorMovimentoX = 0
-                        jogador = desenhaPersonagem(personagemPlayer, int(jogadorFrame), "parado", jogadorVirou)
+                        jogador = desenhaPersonagem(personagemPlayer, 1, "parado", jogadorVirou)
                         jogadorAndando = False
-                        # jogadorVirou = False
-
-                    elif event.key == pygame.K_d:
-                        jogador = desenhaPersonagem(personagemPlayer, int(jogadorFrame), "parado", jogadorVirou)
             else:
                 jogadorMovimentoX = 0
                 jogadorMovimentoY = 0
@@ -186,37 +199,32 @@ def luta(personagemPlayer, personagemComputador, indicePlayer, indiceMaquina):
                         jogadorFrame += 1
 
                 if socoOponente == True:
-                    oponente = desenhaPersonagem(personagemComputador, int(oponenteFrame), "soco", jogadorVirou)
-
                     if verificaColisao(pixelsXJogador, pixelsYJogador, pixelsXOponente, pixelsYOponente) == True:
-                        jogadorVida -= int(dadosOponente["Forca"])
+                        jogadorVida -= (int(dadosOponente["Forca"]) - 5)
+                    
+                    infOponente = animacaoOponente(oponenteFrame, int(dadosOponente["Frames Luta"]), 1, 0.6, personagemComputador, jogadorVirou, oponenteEnegia, numeroAleatorio, "soco")
+                    oponenteFrame = infOponente[0]
+                    habilitaOponente = infOponente[1]
+                    numeroAleatorio = infOponente[2]
+                    oponente = infOponente[3]
+                    oponenteEnegia = infOponente[4]
 
-                    if oponenteFrame >= int(dadosOponente["Frames Luta"]):
-                        oponenteFrame = 1
+                    if infOponente[5] == True:
                         socoOponente = False
-                        habilitaOponente = True
-                        numeroAleatorio = random.randrange(1, 5)
-                        oponente = desenhaPersonagem(personagemComputador, 1, "parado", jogadorVirou)
-                        oponenteEnegia -= 100
-
-                    else:
-                        oponenteFrame += 0.6
                 
                 if oponenteEspecial == True:
-                    oponente = desenhaPersonagem(personagemComputador, int(oponenteFrame), "especial", jogadorVirou)
-                    if oponenteFrame > int(dadosOponente["Frames Poder"]) + 0.5:
-                        oponenteFrame = 1
+                    infOponente = animacaoOponente(oponenteFrame, int(dadosOponente["Frames Poder"]), 0, 0.4, personagemComputador, jogadorVirou, oponenteEnegia, numeroAleatorio, "especial")
+                    oponenteFrame = infOponente[0]
+                    habilitaOponente = infOponente[1]
+                    numeroAleatorio = infOponente[2]
+                    oponente = infOponente[3]
+                    oponenteEnegia = infOponente[4]
+
+                    if infOponente[5] == True:
                         oponenteEspecial = False
-                        habilitaOponente = True
-                        numeroAleatorio = random.randrange(1, 5)
-                        oponente = desenhaPersonagem(personagemComputador, 1, "parado", jogadorVirou)
-                        oponenteEnegia -= 100
                         oponentePoder = True
                         poderOponenteposX = oponentePosX
                         poderOponenteposY = oponentePosY
-
-                    else:
-                        oponenteFrame += 0.4
                     
                 if jogadorAtacou == True:
                     jogador = desenhaPersonagem(personagemPlayer, int(jogadorFrame), "soco", jogadorVirou)
@@ -353,6 +361,12 @@ def luta(personagemPlayer, personagemComputador, indicePlayer, indiceMaquina):
 
         gameDisplay.blit(oponente, (oponentePosX, 190))
         gameDisplay.blit(jogador, (jogadorPosX, jogadorPosY))
+
+        if jogadorVida <= 0:
+            return ["Resultado", "PERDEU", 0]
+
+        elif oponenteVida <= 0:
+            return ["Resultado", "GANHOU", 1]
 
         pygame_display.update()
         clock.tick(60)
