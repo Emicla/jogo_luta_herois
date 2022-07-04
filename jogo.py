@@ -1,5 +1,5 @@
 import pygame, os
-from funcoes.funcoes_gerais import armazenar, ler_registro
+from funcoes.funcoes_gerais import armazenar, ler_registro, registrar
 
 os.system("cls")
 
@@ -34,23 +34,29 @@ while True:
 
 nivel = 1
 
-conteudoArmazenado = ler_registro("Registro de acessos.txt")
-
+conteudoArmazenado = ler_registro("Arquivos/Registro de acessos.txt")
+registroPartidas = ler_registro("Arquivos/Registro de partidas.txt")
+posicaoSave = 0
 achou = False
-for posicao, palavra in enumerate(conteudoArmazenado):
-    if palavra.strip("\n") == email:
-        registroPartidas = ler_registro("Registro de partidas.txt")
-        nivel = registroPartidas[posicao-2]
+
+for posicao, palavra in enumerate(registroPartidas):
+    palavra = palavra.strip("\n")
+    palavra = list(palavra)
+    numero = palavra.pop()
+    palavra = ''.join(palavra)
+    if palavra == email:
+        nivel = int(numero)
+        posicaoSave = posicao
         achou = True
         break
 
 if achou == False:
-    armazenar("1", "Registro de partidas.txt")
+    armazenar("%s1"%email, "Arquivos/Registro de partidas.txt")
 
-armazenar(nomeJogador, "Registro de acessos.txt")
-armazenar(email, "Registro de acessos.txt")
+armazenar(nomeJogador, "Arquivos/Registro de acessos.txt")
+armazenar(email, "Arquivos/Registro de acessos.txt")
 
-from funcoes.funcoes_telas import telaMenu, telaModos, telaContinuar, telaBatalha, telaTorneio, telaResulta
+from funcoes.funcoes_telas import telaMenu, telaBatalha, telaTorneio, telaResulta
 from funcoes.funcoes_luta import luta
 pygame.init()
 
@@ -72,48 +78,22 @@ player = ""
 oponente = ""
 
 resutado = "Indefinido"
-
-def jogo():
-    while True:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                pygame.quit()
-                quit()
-        
-        pygame_display.update()
-        clock.tick(60)
+clicou = False
 
 while True:
-    if telaAtual == "Menu":
-        arrayCena = telaMenu()
-        telaAtual = arrayCena[0]
-        saves = arrayCena[1]
-    
-    elif telaAtual == "Continuar":
-        savesNomes = []
-
-        if len(saves) == 0:
-            savesNomes.append("Nenhum Save encontrado")
-
-        else:
-            for posicao, save in enumerate(saves):
-                save = list(save)
-                save[-2] = ""
-                save = ''.join(save)
-                savesNomes.append(save)
-
-        arrayCena = telaContinuar(saves, savesNomes)
-        telaAtual = arrayCena[0]
-        nivel = int(arrayCena[1])
-
-    elif telaAtual == "Modos":
-        telaAtual = telaModos(nivel)
+    if telaAtual == "Menu" or telaAtual == "Jogo":
+        telaAtual = telaMenu(telaAtual, nivel)
     
     elif telaAtual == "Torneio":
         arrayCena = telaTorneio(nivel, nomesPersonagens)
         telaAtual = arrayCena[0]
         resutado = arrayCena[1]
-        nivel += arrayCena[2]
+        if resutado == "GANHOU":
+            nivel += 1
+            registroPartidas = ler_registro("Arquivos/Registro de partidas.txt")
+            registroPartidas[posicaoSave] = "%s%d"%(email, nivel)
+            registroPartidas = ''.join(registroPartidas)
+            registrar("Arquivos/Registro de partidas.txt", registroPartidas)
 
     elif telaAtual == "Batalha":
         arrayCena = telaBatalha()
